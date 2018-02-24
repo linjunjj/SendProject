@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <style type="text/css">
+        body,html,#container{
+            height: 100%;
+            margin: 0px;
+            font:12px Arial;
+        }
+        .taiwan{
+            border: solid 1px red;
+            color: red;
+            float: left;
+            width: 50px;
+            background-color: rgba(255,0,0,0.1)
+        }
+    </style>
+    <title>Marker example</title>
+</head>
+<body>
+<div id="container" tabindex="0"></div>
+<script src="https://webapi.amap.com/js/marker.js"></script>
+<script src="https://webapi.amap.com/maps?v=1.4.2&amp;key=21ccc9860c3ec9e9d1462e93fa78da0c"></script>
+<script type="text/javascript">
+    var map = new AMap.Map('container', {
+        resizeEnable: true,
+        zoom:11,
+        center: [116.397428, 39.90923]
+    });
+    var marker = new AMap.Marker({ //添加自定义点标记
+        map: map,
+        position: [116.397428, 39.90923], //基点位置
+        offset: new AMap.Pixel(-17, -42), //相对于基点的偏移位置
+        draggable: true,  //是否可拖动
+        content: '<div class="marker-route marker-marker-bus-from">我的位置</div>'   //自定义点标记覆盖物内容
+    });
+    var marker1 = new AMap.Marker({ //添加自定义点标记
+        map: map,
+        position: [116.397428, 39.98273], //基点位置
+        offset: new AMap.Pixel(-17, -42), //相对于基点的偏移位置
+        draggable: true,  //是否可拖动
+        content: '<div class="marker-route marker-marker-bus-from">我的位置ss</div>'   //自定义点标记覆盖物内容
+    });
+</script>
+<script type="text/javascript" src="https://webapi.amap.com/demos/js/liteToolbar.js"></script>
+</body>
+</html>
