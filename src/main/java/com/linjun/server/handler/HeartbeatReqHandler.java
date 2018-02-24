@@ -3,6 +3,7 @@ package com.linjun.server.handler;
 
 import com.linjun.common.ShowcasePacket;
 import com.linjun.common.intf.AbsShowcaseBsHandler;
+import com.linjun.common.packets.HeartbeatBody;
 import com.linjun.common.packets.LoginReqBody;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,7 +14,7 @@ import org.tio.core.ChannelContext;
  * @author tanyaowu
  * 2017年3月27日 下午9:51:28
  */
-public class HeartbeatReqHandler extends AbsShowcaseBsHandler<LoginReqBody> {
+public class HeartbeatReqHandler extends AbsShowcaseBsHandler<HeartbeatBody> {
 	private static Logger log = LoggerFactory.getLogger(HeartbeatReqHandler.class);
 
 	/**
@@ -36,8 +37,8 @@ public class HeartbeatReqHandler extends AbsShowcaseBsHandler<LoginReqBody> {
 	 * @author tanyaowu
 	 */
 	@Override
-	public Class<LoginReqBody> bodyClass() {
-		return LoginReqBody.class;
+	public Class<HeartbeatBody> bodyClass() {
+		return HeartbeatBody.class;
 	}
 
 	/**
@@ -49,7 +50,7 @@ public class HeartbeatReqHandler extends AbsShowcaseBsHandler<LoginReqBody> {
 	 * @author tanyaowu
 	 */
 	@Override
-	public Object handler(ShowcasePacket packet, LoginReqBody bsBody, ChannelContext channelContext) throws Exception {
+	public Object handler(ShowcasePacket packet, HeartbeatBody bsBody, ChannelContext channelContext) throws Exception {
 		//心跳消息,啥也不用做
 		System.out.println("这是心跳");
 		return null;
