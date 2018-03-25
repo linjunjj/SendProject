@@ -51,7 +51,10 @@ public class HeartbeatReqHandler extends AbsShowcaseBsHandler<HeartbeatBody> {
 	 */
 	@Override
 	public Object handler(ShowcasePacket packet, HeartbeatBody bsBody, ChannelContext channelContext) throws Exception {
-		//心跳消息,啥也不用做
+         System.out.println(bsBody.toString());
+
+
+
 		System.out.println("这是心跳");
 		return null;
 	}
