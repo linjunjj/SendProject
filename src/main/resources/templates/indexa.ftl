@@ -36,6 +36,20 @@
         infoWindow.open(map, e.target.getPosition());
     }
     map.setFitView();
+
+    var  stompClient=null;
+    function connect() {
+        var  socket=new SockJS("/endpointWisely");
+        stompClient = Stomp.over(socket);
+        stompClient.connect({},function (frame) {
+            setConnected(true);
+            console.log("connected : "+frame);
+            stompClient.subscribe("/topic/getResponse",function (response) {
+                showResponse(JSON.parse(response.body).responseMessage);
+            })
+        })
+    }
+
 </script>
 </body>
 </html>
