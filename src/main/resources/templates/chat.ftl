@@ -75,7 +75,7 @@
     var websocket = null;
     var cahtNum = $('.chat-num').text();
     if ('WebSocket' in window) {
-        websocket = new WebSocket('ws://localhost:8080/webSocket');
+        websocket = new WebSocket('ws://localhost:8080/chat/webSocket');
 
     } else {
         alert('该浏览器不支持websocket');
