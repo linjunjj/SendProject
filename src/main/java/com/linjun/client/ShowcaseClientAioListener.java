@@ -38,10 +38,7 @@ public class ShowcaseClientAioListener implements ClientAioListener {
 	 * @throws Exception
 	 * @author tanyaowu
 	 */
-	@Override
-	public void onAfterClose(ChannelContext channelContext, Throwable throwable, String remark, boolean isRemove) throws Exception {
-		log.info("onAfterClose channelContext:{}, throwable:{}, remark:{}, isRemove:{}", channelContext, throwable, remark, isRemove);
-	}
+
 
 	/**
 	 * @param channelContext
@@ -59,6 +56,16 @@ public class ShowcaseClientAioListener implements ClientAioListener {
 
 	}
 
+	@Override
+	public void onAfterDecoded(ChannelContext channelContext, Packet packet, int i) throws Exception {
+
+	}
+
+	@Override
+	public void onAfterReceivedBytes(ChannelContext channelContext, int i) throws Exception {
+
+	}
+
 	/**
 	 * @param channelContext
 	 * @param packet
@@ -66,10 +73,6 @@ public class ShowcaseClientAioListener implements ClientAioListener {
 	 * @throws Exception
 	 * @author tanyaowu
 	 */
-	@Override
-	public void onAfterReceived(ChannelContext channelContext, Packet packet, int packetSize) throws Exception {
-		log.info("onAfterReceived channelContext:{}, packet:{}, packetSize:{}", channelContext, Json.toJson(packet), packetSize);
-	}
 
 	/**
 	 * @param channelContext
@@ -81,6 +84,11 @@ public class ShowcaseClientAioListener implements ClientAioListener {
 	@Override
 	public void onAfterSent(ChannelContext channelContext, Packet packet, boolean isSentSuccess) throws Exception {
 		log.info("onAfterSent channelContext:{}, packet:{}, isSentSuccess:{}", channelContext, Json.toJson(packet), isSentSuccess);
+	}
+
+	@Override
+	public void onAfterHandled(ChannelContext channelContext, Packet packet, long l) throws Exception {
+
 	}
 
 	@Override
