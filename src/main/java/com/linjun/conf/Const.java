@@ -6,5 +6,5 @@ package com.linjun.conf;
  * @desc
  **/
 public class Const {
-    public  final  static int PORT=8080;
+    public  final  static int PORT=8000;
 }

@@ -47,45 +47,7 @@
 <script src="http://cdn.bootcss.com/mdui/0.3.0/js/mdui.min.js"></script>
 <script src="https://cdn.bootcss.com/jquery/1.12.1/jquery.js"></script>
 
-<#--<script type="text/javascript">-->
-    <#--//初始化地图对象，加载地图-->
-    <#--var map = new AMap.Map("container", {resizeEnable: true});-->
-    <#--var lnglats = [-->
-        <#--[116.368904, 39.923423],-->
-        <#--[116.382122, 39.921176],-->
-        <#--[116.387271, 39.922501],-->
-        <#--[116.398258, 39.914600]-->
-    <#--];-->
-    <#--var infoWindow = new AMap.InfoWindow({offset: new AMap.Pixel(0, -30)});-->
-    <#--for (var i = 0, marker; i < lnglats.length; i++) {-->
-        <#--var marker = new AMap.Marker({-->
-            <#--position: lnglats[i],-->
-            <#--map: map-->
-        <#--});-->
-        <#--marker.content = '我是第' + (i + 1) + '个Marker';-->
-        <#--marker.on('click', markerClick);-->
-        <#--marker.emit('click', {target: marker});-->
-    <#--}-->
-    <#--function markerClick(e) {-->
-        <#--infoWindow.setContent(e.target.content);-->
-        <#--infoWindow.open(map, e.target.getPosition());-->
-    <#--}-->
-    <#--map.setFitView();-->
 
-    <#--var  stompClient=null;-->
-    <#--function connect() {-->
-        <#--var  socket=new SockJS("/endpointWisely");-->
-        <#--stompClient = Stomp.over(socket);-->
-        <#--stompClient.connect({},function (frame) {-->
-            <#--setConnected(true);-->
-            <#--console.log("connected : "+frame);-->
-            <#--stompClient.subscribe("/topic/getResponse",function (response) {-->
-                <#--showResponse(JSON.parse(response.body).responseMessage);-->
-            <#--})-->
-        <#--})-->
-    <#--}-->
-
-<#--</script>-->
 <script type="text/template" class="package-price-template" id="message-template">
     <div class="mdui-card card-container-message">
         <div class="mdui-card-primary">
@@ -95,6 +57,8 @@
 </script>
 
 <script type="application/javascript">
+    var map = new AMap.Map("container", {resizeEnable: true,zoom:10});
+
     var websocket = null;
     var cahtNum = $('.chat-num').text();
     if ('WebSocket' in window) {
@@ -111,7 +75,7 @@
     websocket.onclose = function (event) {
         console.log('websocket关闭连接');
     }
-
+    var sum=0;
     websocket.onmessage = function (event) {
         console.log('websocket收到消息' + event.data);
         var result = $.parseJSON(event.data);
@@ -122,7 +86,33 @@
         }
         else {
             $('.chat-num').text(result.userNum);
+            this.sum=result.userNum;
+            console.log("sfafsa"+this.sum)
+            map.clearMap();
+            var marker = new AMap.Marker({
+                map: map,
+                position: [116.368904, 39.923423+this.sum/10]
+            });
 
+
+            // var lnglats = [
+            //     [116.368904, 39.923423+this.sum/10]
+            // ];
+            //
+            // // var infoWindow = new AMap.InfoWindow({offset: new AMap.Pixel(0, -30)});
+            // for (var i = 0, marker; i < lnglats.length; i++) {
+            //     var marker = new AMap.Marker({
+            //         position: lnglats[i],
+            //         map: map
+            //     });
+            //     // marker.content = '我是第' + this.sum+ '个Marker';
+            //     // marker.on('click', markerClick);
+            //     // marker.emit('click', {target: marker});
+            // }
+            //
+
+            map.setFitView();
+            map.setZoom(13);
         }
 
     }
@@ -151,41 +141,27 @@
 
     }
 
-    var map = new AMap.Map("container", {resizeEnable: true});
-    var lnglats = [
-        [116.368904, 39.923423],
-        [116.382122, 39.921176],
-        [116.387271, 39.922501],
-        [116.398258, 39.914600]
-    ];
-    var infoWindow = new AMap.InfoWindow({offset: new AMap.Pixel(0, -30)});
-    for (var i = 0, marker; i < lnglats.length; i++) {
-        var marker = new AMap.Marker({
-            position: lnglats[i],
-            map: map
-        });
-        marker.content = '我是第' + (i + 1) + '个Marker';
-        marker.on('click', markerClick);
-        marker.emit('click', {target: marker});
-    }
-    function markerClick(e) {
-        infoWindow.setContent(e.target.content);
-        infoWindow.open(map, e.target.getPosition());
-    }
-    map.setFitView();
 
-    var  stompClient=null;
-    function connect() {
-        var  socket=new SockJS("/endpointWisely");
-        stompClient = Stomp.over(socket);
-        stompClient.connect({},function (frame) {
-            setConnected(true);
-            console.log("connected : "+frame);
-            stompClient.subscribe("/topic/getResponse",function (response) {
-                showResponse(JSON.parse(response.body).responseMessage);
-            })
-        })
-    }
+
+    // var lnglats = [
+    //     [116.368904, 39.923423+this.sum]
+    // ];
+    // var infoWindow = new AMap.InfoWindow({offset: new AMap.Pixel(0, -30)});
+    // for (var i = 0, marker; i < lnglats.length; i++) {
+    //     var marker = new AMap.Marker({
+    //         position: lnglats[i],
+    //         map: map
+    //     });
+    //     marker.content = '我是第' + this.sum+ '个Marker';
+    //     marker.on('click', markerClick);
+    //     marker.emit('click', {target: marker});
+    // }
+    // function markerClick(e) {
+    //     infoWindow.setContent(e.target.content);
+    //     infoWindow.open(map, e.target.getPosition());
+    // }
+    // map.setFitView();
+
 </script>
 
 </body>

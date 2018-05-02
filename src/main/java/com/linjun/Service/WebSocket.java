@@ -20,6 +20,7 @@ import java.util.concurrent.CopyOnWriteArraySet;
 @Component
 @ServerEndpoint("/webSocket")
 public class WebSocket {
+    private  double m;
 
     //定义一个全局的初始化值count=0
     private static long count = 0;
@@ -41,10 +42,7 @@ public class WebSocket {
         messageVO.setMessage("有新的连接");
 
         ObjectMapper mapper = new ObjectMapper();
-
         String Json = "";
-
-
         while (count<=100000000){
             messageVO.setUserNum((int) count);
             try {
@@ -53,7 +51,9 @@ public class WebSocket {
             }
             this.sendMessage(Json);
             count++;
-            Thread.sleep(1000);
+
+            System.out.println("撒大声地所");
+            Thread.sleep(5000);
         }
     }
 
