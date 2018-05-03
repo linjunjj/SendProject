@@ -1,19 +1,14 @@
 package com.linjun.handler;
 
 import com.linjun.SendPacket;
-import com.linjun.conf.NettyConfig;
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
+
 import io.netty.channel.*;
 import io.netty.channel.group.ChannelGroup;
 import io.netty.channel.group.DefaultChannelGroup;
-import io.netty.handler.codec.http.DefaultFullHttpResponse;
-import io.netty.handler.codec.http.FullHttpRequest;
-import io.netty.handler.codec.http.HttpResponseStatus;
-import io.netty.handler.codec.http.HttpVersion;
 import io.netty.handler.codec.http.websocketx.*;
-import io.netty.util.CharsetUtil;
 import io.netty.util.concurrent.GlobalEventExecutor;
+
+import java.time.LocalDateTime;
 
 /**
  * @author 林俊
@@ -22,10 +17,9 @@ import io.netty.util.concurrent.GlobalEventExecutor;
  **/
 
 public class ServiceHandler extends SimpleChannelInboundHandler<Object> {
-    private WebSocketServerHandshaker webSocketServerHandshaker;
-    private static final String WEB_SOCKET_URL = "ws://localhost:8888/webSocket";
     private static ChannelGroup channels = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
     private static double d;
+
     @Override
     public void channelRead0(ChannelHandlerContext ctx, Object msg) throws Exception {
 
@@ -36,9 +30,12 @@ public class ServiceHandler extends SimpleChannelInboundHandler<Object> {
            d=em.getJingdu();
             System.out.println("RECEIVED: " + ctx.channel().remoteAddress() + " " + em.getJingdu());
         }
+        System.out.println(incoming.remoteAddress() + ": " + ((TextWebSocketFrame)msg).text());
+
+        ctx.channel().writeAndFlush(new TextWebSocketFrame("来自服务端: " + LocalDateTime.now()));
+
+
     }
-
-
 
     @Override
     public void handlerRemoved(ChannelHandlerContext ctx) throws Exception {
@@ -95,67 +92,5 @@ public class ServiceHandler extends SimpleChannelInboundHandler<Object> {
         ctx.close();
     }
 
-    private void handWebSocketFrame(ChannelHandlerContext context,WebSocketFrame webSocketFrame){
-        if (webSocketFrame instanceof CloseWebSocketFrame){//判断是否是关闭websocket的指令
-            webSocketServerHandshaker.close(context.channel(),(CloseWebSocketFrame) webSocketFrame.retain());
-        }
-        if (webSocketFrame instanceof PingWebSocketFrame){//判断是否是ping消息
-            context.channel().write(new PongWebSocketFrame(webSocketFrame.content().retain()));
-            return;
-        }
-        if (!(webSocketFrame instanceof TextWebSocketFrame)){//判断是否是二进制消息
-            System.out.println("不支持二进制消息");
-            throw new RuntimeException(this.getClass().getName());
-        }
-        //返回应答消息
-        //获取客户端向服务端发送的消息
-        String request = ((TextWebSocketFrame) webSocketFrame ).text();
-        System.out.println("服务端收到客户端的消息：" + request);
-        TextWebSocketFrame textWebSocketFrame = new TextWebSocketFrame(context.channel().id() + ":" + request);
-        //服务端向每个连接上来的客户端发送消息
-        NettyConfig.group.writeAndFlush(textWebSocketFrame);
-    }
-
-
-
-
-    /**
-     * 处理客户端向服务端发起http握手请求业务
-     * @param context
-     * @param fullHttpRequest
-     */
-    private void handHttpRequest(ChannelHandlerContext context,FullHttpRequest fullHttpRequest){
-        if (!fullHttpRequest.getDecoderResult().isSuccess() ||!("websocket".equals(fullHttpRequest.headers().get("Upgrade")))){//判断是否http握手请求
-            sendHttpResponse(context,fullHttpRequest, new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.BAD_REQUEST));
-            return;
-        }
-        WebSocketServerHandshakerFactory webSocketServerHandshakerFactory = new WebSocketServerHandshakerFactory(WEB_SOCKET_URL,null,false);
-        webSocketServerHandshaker = webSocketServerHandshakerFactory.newHandshaker(fullHttpRequest);
-        if (webSocketServerHandshaker == null){
-            WebSocketServerHandshakerFactory.sendUnsupportedVersionResponse(context.channel());
-        }else{
-            webSocketServerHandshaker.handshake(context.channel(),fullHttpRequest);
-        }
-    }
-
-    /**
-     * 服务端想客户端发送响应消息
-     * @param context
-     * @param fullHttpRequest
-     * @param defaultFullHttpResponse
-     */
-    private void sendHttpResponse(ChannelHandlerContext context, FullHttpRequest fullHttpRequest, DefaultFullHttpResponse defaultFullHttpResponse){
-        if (defaultFullHttpResponse.getStatus().code() != 200){
-            ByteBuf buf = Unpooled.copiedBuffer(defaultFullHttpResponse.getStatus().toString(), CharsetUtil.UTF_8);
-            defaultFullHttpResponse.content().writeBytes(buf);
-            buf.release();
-        }
-        //服务端向客户端发送数据
-        ChannelFuture future = context.channel().writeAndFlush(defaultFullHttpResponse);
-        if (defaultFullHttpResponse.getStatus().code() !=200){
-            future.addListener(ChannelFutureListener.CLOSE);
-        }
-
-    }
 }
 
