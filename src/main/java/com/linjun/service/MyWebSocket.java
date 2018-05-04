@@ -1,5 +1,6 @@
 package com.linjun.service;
 
+import com.linjun.conf.Const;
 import com.linjun.handler.WebPipeline;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
@@ -23,8 +24,8 @@ public class MyWebSocket implements  Runnable{
             server.group(bossGroup, workerGroup).channel(NioServerSocketChannel.class)
                     .childHandler(new WebPipeline()).option(ChannelOption.SO_BACKLOG, 128)
                     .childOption(ChannelOption.SO_KEEPALIVE, true).childOption(ChannelOption.TCP_NODELAY, true);
-            ChannelFuture f = server.bind(8000).sync();
-            System.out.println("SYSTEM - SERVER PORT: " + 8000);
+            ChannelFuture f = server.bind(Const.WEBPORT).sync();
+            System.out.println("SYSTEM - SERVER PORT: " + Const.WEBPORT);
             f.channel().closeFuture().sync();
 
         } catch (InterruptedException e) {

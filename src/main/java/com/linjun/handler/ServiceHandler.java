@@ -18,7 +18,6 @@ import java.time.LocalDateTime;
 
 public class ServiceHandler extends SimpleChannelInboundHandler<Object> {
     private static ChannelGroup channels = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
-    private static double d;
 
     @Override
     public void channelRead0(ChannelHandlerContext ctx, Object msg) throws Exception {
@@ -27,11 +26,9 @@ public class ServiceHandler extends SimpleChannelInboundHandler<Object> {
 
         if (msg instanceof SendPacket) {
             SendPacket em = (SendPacket) msg;
-           d=em.getJingdu();
             System.out.println("RECEIVED: " + ctx.channel().remoteAddress() + " " + em.getJingdu());
         }
         ctx.channel().writeAndFlush(new TextWebSocketFrame("来自服务端: " + LocalDateTime.now()));
-
     }
 
     @Override
