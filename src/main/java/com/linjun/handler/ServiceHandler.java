@@ -30,10 +30,7 @@ public class ServiceHandler extends SimpleChannelInboundHandler<Object> {
            d=em.getJingdu();
             System.out.println("RECEIVED: " + ctx.channel().remoteAddress() + " " + em.getJingdu());
         }
-        System.out.println(incoming.remoteAddress() + ": " + ((TextWebSocketFrame)msg).text());
-
         ctx.channel().writeAndFlush(new TextWebSocketFrame("来自服务端: " + LocalDateTime.now()));
-
 
     }
 

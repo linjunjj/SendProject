@@ -5,6 +5,7 @@ import io.netty.channel.ChannelPipeline;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.handler.codec.http.HttpObjectAggregator;
 import io.netty.handler.codec.http.HttpServerCodec;
+import io.netty.handler.codec.http.websocketx.WebSocketServerProtocolHandler;
 import io.netty.handler.codec.serialization.ClassResolvers;
 import io.netty.handler.codec.serialization.ObjectDecoder;
 import io.netty.handler.codec.serialization.ObjectEncoder;
@@ -23,9 +24,11 @@ public class InitializerPipeline extends ChannelInitializer<SocketChannel> {
         ChannelPipeline pipeline = ch.pipeline();
         ch.pipeline().addLast(new ObjectDecoder(Integer.MAX_VALUE, ClassResolvers.weakCachingConcurrentResolver(null)));
         ch.pipeline().addLast(new ObjectEncoder());
+
+        pipeline.addLast(new HttpServerCodec());
         pipeline.addLast("handler", new ServiceHandler());
-        pipeline.addLast("http-codec", new HttpServerCodec());
         pipeline.addLast("aggregator", new HttpObjectAggregator(65535));
+        pipeline.addLast(new WebSocketServerProtocolHandler("/ws"));
         pipeline.addLast("http-chunked", new ChunkedWriteHandler());
 
     }
