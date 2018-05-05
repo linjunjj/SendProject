@@ -15,6 +15,8 @@
     <script type="text/javascript"
             src="http://webapi.amap.com/maps?v=1.4.5&key=21ccc9860c3ec9e9d1462e93fa78da0c"></script>
     <script type="text/javascript" src="http://cache.amap.com/lbs/static/addToolbar.js"></script>
+    <!-- UI组件库 1.0 -->
+    <script src="//webapi.amap.com/ui/1.0/main.js?v=1.0.11"></script>
 </head>
 <body class="mdui-theme-primary-indigo mdui-theme-accent-pink">
 
@@ -75,40 +77,74 @@
     websocket.onclose = function (event) {
         console.log('websocket关闭连接');
     }
-
+    var temp;
     websocket.onmessage = function (event) {
         console.log('websocket收到消息' + event.data);
         var result = $.parseJSON(event.data);
-            // $('.chat-num').text(result.userNum);
-              result.jingdu;
-              result.weidu;
-            console.log("sfafsa"+this.jingdu)
-            map.clearMap();
-            var marker = new AMap.Marker({
-                map: map,
-                position: [result.jingdu, result.weidu]
-            });
-            // var lnglats = [
-            //     [116.368904, 39.923423+this.sum/10]
-            // ];
-            //
-            // // var infoWindow = new AMap.InfoWindow({offset: new AMap.Pixel(0, -30)});
-            // for (var i = 0, marker; i < lnglats.length; i++) {
-            //     var marker = new AMap.Marker({
-            //         position: lnglats[i],
-            //         map: map
-            //     });
-            //     // marker.content = '我是第' + this.sum+ '个Marker';
-            //     // marker.on('click', markerClick);
-            //     // marker.emit('click', {target: marker});
-            // }
-            //
+        $('.chat-num').text(result.CountPackage);
+        console.log("sfafsa" + this.jingdu)
 
-            map.setFitView();
+
+        if (this.temp == null) {
+            this.temp = result.deviceid;
+        } else {
+            if (this.temp == result.deviceid) {
+                map.clearMap();
+                AMapUI.loadUI(['overlay/SimpleInfoWindow'], function (SimpleInfoWindow) {
+                    var marker = new AMap.Marker({
+                        map: map,
+                        position: [result.jingdu, result.weidu]
+                    });
+                    var infoWindow = new SimpleInfoWindow({
+
+                        infoTitle: result.deviceid,
+                        infoBody: '<p class="my-desc"><strong>这里是内容。</strong></p>',
+                        //基点指向marker的头部位置
+                        offset: new AMap.Pixel(0, -31)
+                    });
+
+                    function openInfoWin() {
+                        infoWindow.open(map, marker.getPosition());
+                    }
+
+                    //marker 点击时打开
+                    AMap.event.addListener(marker, 'click', function () {
+                        openInfoWin();
+                    });
+
+                    openInfoWin();
+                });
+            } else {
+                AMapUI.loadUI(['overlay/SimpleInfoWindow'], function (SimpleInfoWindow) {
+
+                    var marker = new AMap.Marker({
+                        map: map,
+                        position: [result.jingdu, result.weidu]
+                    });
+                    var infoWindow = new SimpleInfoWindow({
+
+                        infoTitle: '<strong>result.deviceid</strong>',
+                        infoBody: '<p class="my-desc"><strong>这里是内容。</strong></p>',
+                        //基点指向marker的头部位置
+                        offset: new AMap.Pixel(0, -31)
+                    });
+
+                    function openInfoWin() {
+                        infoWindow.open(map, marker.getPosition());
+                    }
+
+                    //marker 点击时打开
+                    AMap.event.addListener(marker, 'click', function () {
+                        openInfoWin();
+                    });
+
+                    openInfoWin();
+                });
+
+
+            }
         }
-
-
-
+    }
     websocket.onerror = function (event) {
         console.log('websocket通信发生错误');
 
@@ -135,24 +171,6 @@
 
 
 
-    // var lnglats = [
-    //     [116.368904, 39.923423+this.sum]
-    // ];
-    // var infoWindow = new AMap.InfoWindow({offset: new AMap.Pixel(0, -30)});
-    // for (var i = 0, marker; i < lnglats.length; i++) {
-    //     var marker = new AMap.Marker({
-    //         position: lnglats[i],
-    //         map: map
-    //     });
-    //     marker.content = '我是第' + this.sum+ '个Marker';
-    //     marker.on('click', markerClick);
-    //     marker.emit('click', {target: marker});
-    // }
-    // function markerClick(e) {
-    //     infoWindow.setContent(e.target.content);
-    //     infoWindow.open(map, e.target.getPosition());
-    // }
-    // map.setFitView();
 
 </script>
 

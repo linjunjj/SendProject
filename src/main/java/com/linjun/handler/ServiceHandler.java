@@ -19,17 +19,20 @@ import java.time.LocalDateTime;
 
 public class ServiceHandler extends SimpleChannelInboundHandler<Object> {
     private static ChannelGroup channels = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
+     private int people;
+     private  String afterPeople;
 
     @Override
     public void channelRead0(ChannelHandlerContext ctx, Object msg) throws Exception {
 
         Channel incoming = ctx.channel();
+
         if (msg instanceof SendPacket) {
             SendPacket em = (SendPacket) msg;
             System.out.println("RECEIVED: " + ctx.channel().remoteAddress() + " " + em.getJingdu());
-
         }
         SendPacket ems = (SendPacket) msg;
+        ems.setSumCountPackage(channels.size());
         ObjectMapper mapper = new ObjectMapper();
           String   json = mapper.writeValueAsString(ems);
           System.out.println(json);
