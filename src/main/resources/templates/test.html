@@ -11,7 +11,7 @@
         window.WebSocket = window.MozWebSocket;
     }
     if (window.WebSocket) {
-        socket = new WebSocket("ws://localhost:8000/ws");
+        socket = new WebSocket("ws://localhost:8081/ws");
         socket.onopen = function(event) {
             var ta = document.getElementById('responseText');
             ta.value = "连接开启!";
@@ -27,7 +27,6 @@
     } else {
         alert("你的浏览器不支持 WebSocket！");
     }
-
     function send(message) {
         if (!window.WebSocket) {
             return;

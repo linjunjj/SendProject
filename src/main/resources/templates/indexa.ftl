@@ -62,7 +62,7 @@
     var websocket = null;
     var cahtNum = $('.chat-num').text();
     if ('WebSocket' in window) {
-        websocket = new WebSocket('ws://localhost:8080/webSocket');
+        websocket = new WebSocket('ws://localhost:8081/ws');
 
     } else {
         alert('该浏览器不支持websocket');
@@ -75,26 +75,19 @@
     websocket.onclose = function (event) {
         console.log('websocket关闭连接');
     }
-    var sum=0;
+
     websocket.onmessage = function (event) {
         console.log('websocket收到消息' + event.data);
         var result = $.parseJSON(event.data);
-        if (result.type == 3) {
-            var element = document.getElementById('message-template').innerHTML;
-            $('.message-container').append(element);
-            $(".message-content:last").html(result.message);
-        }
-        else {
-            $('.chat-num').text(result.userNum);
-            this.sum=result.userNum;
-            console.log("sfafsa"+this.sum)
+            // $('.chat-num').text(result.userNum);
+              result.jingdu;
+              result.weidu;
+            console.log("sfafsa"+this.jingdu)
             map.clearMap();
             var marker = new AMap.Marker({
                 map: map,
-                position: [116.368904, 39.923423+this.sum/10]
+                position: [result.jingdu, result.weidu]
             });
-
-
             // var lnglats = [
             //     [116.368904, 39.923423+this.sum/10]
             // ];
@@ -112,10 +105,9 @@
             //
 
             map.setFitView();
-            map.setZoom(13);
         }
 
-    }
+
 
     websocket.onerror = function (event) {
         console.log('websocket通信发生错误');

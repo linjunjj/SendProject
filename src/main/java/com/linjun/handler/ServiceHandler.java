@@ -1,5 +1,6 @@
 package com.linjun.handler;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.linjun.SendPacket;
 
 import io.netty.channel.*;
@@ -23,12 +24,19 @@ public class ServiceHandler extends SimpleChannelInboundHandler<Object> {
     public void channelRead0(ChannelHandlerContext ctx, Object msg) throws Exception {
 
         Channel incoming = ctx.channel();
-
         if (msg instanceof SendPacket) {
             SendPacket em = (SendPacket) msg;
             System.out.println("RECEIVED: " + ctx.channel().remoteAddress() + " " + em.getJingdu());
+
         }
-        ctx.channel().writeAndFlush(new TextWebSocketFrame("来自服务端: " + LocalDateTime.now()));
+        SendPacket ems = (SendPacket) msg;
+        ObjectMapper mapper = new ObjectMapper();
+          String   json = mapper.writeValueAsString(ems);
+          System.out.println(json);
+        for (Channel channel : channels) {
+            channel.writeAndFlush(new TextWebSocketFrame(json));
+        }
+
     }
 
     @Override
@@ -43,7 +51,6 @@ public class ServiceHandler extends SimpleChannelInboundHandler<Object> {
             else
                 channel.writeAndFlush(incoming.remoteAddress() + " 离线");
         }
-
         channels.remove(incoming);
         System.out.println("SYSTEM CHANNEL SIZE: " + channels.size());
     }
@@ -71,7 +78,6 @@ public class ServiceHandler extends SimpleChannelInboundHandler<Object> {
         ctx.writeAndFlush(incoming.remoteAddress() + " 加入成功\n");
         super.channelActive(ctx);
     }
-
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
         Channel incoming = ctx.channel();

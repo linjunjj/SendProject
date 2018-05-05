@@ -22,14 +22,8 @@ public class InitializerPipeline extends ChannelInitializer<SocketChannel> {
     @Override
     protected void initChannel(SocketChannel ch) throws Exception {
         ChannelPipeline pipeline = ch.pipeline();
-        ch.pipeline().addLast(new ObjectDecoder(Integer.MAX_VALUE, ClassResolvers.weakCachingConcurrentResolver(null)));
-        ch.pipeline().addLast(new ObjectEncoder());
-
-        pipeline.addLast(new HttpServerCodec());
+        pipeline.addLast(new ObjectDecoder(Integer.MAX_VALUE, ClassResolvers.weakCachingConcurrentResolver(null)));
+        pipeline.addLast(new ObjectEncoder());
         pipeline.addLast("handler", new ServiceHandler());
-        pipeline.addLast("aggregator", new HttpObjectAggregator(65535));
-        pipeline.addLast(new WebSocketServerProtocolHandler("/ws"));
-        pipeline.addLast("http-chunked", new ChunkedWriteHandler());
-
     }
 }

@@ -21,10 +21,7 @@ public class WebPipeline extends ChannelInitializer<SocketChannel> {
         pipeline.addLast(new HttpServerCodec());
         pipeline.addLast(new HttpObjectAggregator(64*1024));
         pipeline.addLast(new ChunkedWriteHandler());
-
-//        pipeline.addLast(new HttpRequestHandler("/ws"));
         pipeline.addLast(new WebSocketServerProtocolHandler("/ws"));
-
         pipeline.addLast("handler", new ServiceHandler());
     }
 }
