@@ -106,7 +106,6 @@
                     function openInfoWin() {
                         infoWindow.open(map, marker.getPosition());
                     }
-
                     //marker 点击时打开
                     AMap.event.addListener(marker, 'click', function () {
                         openInfoWin();
