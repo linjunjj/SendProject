@@ -27,7 +27,6 @@ public class MyWebSocket implements  Runnable{
             ChannelFuture f = server.bind(Const.WEBPORT).sync();
             System.out.println("SYSTEM - SERVER PORT: " + Const.WEBPORT);
             f.channel().closeFuture().sync();
-
         } catch (InterruptedException e) {
             System.out.println("SYSTEM ERROR: " + e.getMessage());
         } finally {
